@@ -1,6 +1,6 @@
 #! /usr/bin/env perl -w
 # Author:  John Tyree
-# Website: http://www.github.com/muennich/urxvt-perls
+# Website: http://github.com/johntyree/urxvt-perls/blob/master/rotate-colors
 # License: CCBYNC
 
 # Use keyboard shortcuts to load colors of the form *.colorN:XXXXXX from a file
