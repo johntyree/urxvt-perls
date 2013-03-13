@@ -61,9 +61,14 @@ Use Meta-u to activate URL selection mode, then use the following keys:
 
 Options:
 
-    URxvt.urlLauncher:   browser/command to open selected URL with
-    URxvt.underlineURLs: if set to true, all URLs get underlined
-    URvxt.urlButton:     mouse button to click-open URLs (default: 2)
+    URxvt.url-select.autocopy:  if set to true, selected URLs are automatically
+                                copied to the PRIMARY buffer
+    URxvt.url-select.button:    mouse button to click-open URLs (default: 2)
+    URxvt.url-select.launcher:  browser/command to open selected URL with
+    URxvt.url-select.underline: if set to true, all URLs get underlined
+
+For compatibility reasons, url-select will also use any patterns defined for
+the matcher extension by reading all `URxvt.matcher.pattern.[0-9]` resources.
 
 
 clipboard
@@ -78,20 +83,24 @@ After installing, put the following lines in your .Xdefaults/.Xresources:
     URxvt.keysym.M-v:   perl:clipboard:paste
     URxvt.keysym.M-C-v: perl:clipboard:paste_escaped
 
+Options:
+    URxvt.clipboard.autocopy: if set to true, the clipboard is automatically
+                              updated whenever the PRIMARY selection changes
+
 You can also overwrite the system commands to use for copying/pasting.
 The default ones are:
 
-    URxvt.copyCommand:  xsel -ib
-    URxvt.pasteCommand: xsel -ob
+    URxvt.clipboard.copycmd:  xsel -ib
+    URxvt.clipboard.pastecmd: xsel -ob
 
 If you prefer xclip, then put these lines in your .Xdefaults/.Xresources:
 
-    URxvt.copyCommand:  xclip -i -selection clipboard
-    URxvt.pasteCommand: xclip -o -selection clipboard
+    URxvt.clipboard.copycmd:  xclip -i -selection clipboard
+    URxvt.clipboard.pastecmd: xclip -o -selection clipboard
 
 On Mac OS X, put these lines in your .Xdefaults/.Xresources:
 
-    URxvt.copyCommand:  pbcopy
-    URxvt.pasteCommand: pbpaste
+    URxvt.clipboard.copycmd:  pbcopy
+    URxvt.clipboard.pastecmd: pbpaste
 
 The use of the functions should be self-explanatory!
