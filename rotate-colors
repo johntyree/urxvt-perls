@@ -29,7 +29,7 @@ sub read_colors {
     my %colors;
 
     while (my $line = <$fin>) {
-        if ($line =~ /(\w+)\s+?:\s+?(.[0-9a-fA-F]+)/) {
+        if ($line =~ /(\w+)\s*:\s*(#[0-9a-fA-F]+)/) {
             $colors{$1} = $2;
         }
     }
