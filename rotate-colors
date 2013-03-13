@@ -1,0 +1,85 @@
+#! /usr/bin/env perl -w
+# Author:  John Tyree
+# Website: http://www.github.com/muennich/urxvt-perls
+# License: CCBYNC
+
+# Use keyboard shortcuts to load colors of the form *.colorN:XXXXXX from a file
+# This gives us "on demand" theme switching.
+
+# Usage: put the following lines in your .Xdefaults/.Xresources:
+#   URxvt.perl-ext-common: ...,rotate-colors
+#   URxvt.colorFiles: ~/.Xresources,~/light.txt,~/dark.txt
+#   URxvt.keysym.M-C-n:   perl:rotate-colors:forward
+#   URxvt.keysym.M-C-p:   perl:rotate-colors:backward
+
+use strict;
+
+
+sub on_start {
+    my ($self) = @_;
+    $self->{current_index} = -1;
+    my @arr = split(/,/, $self->x_resource('colorFiles') || '');
+    $self->{color_files} = \@arr;
+    ()
+}
+
+sub read_colors {
+    my $fn = shift;
+    open my $fin, $fn or print STDERR "Unable to open $fn for reading";
+    my %colors;
+
+    while (my $line = <$fin>) {
+        if ($line =~ /(\w+)\s+?:\s+?(.[0-9a-fA-F]+)/) {
+            $colors{$1} = $2;
+        }
+    }
+    return %colors
+}
+
+sub escape_seq {
+    my ($k, $v) = @_;
+    my $cmd = "";
+    if ($k =~ /^color(\d+)$/) {
+        $cmd = "4;$1;$v";
+    } elsif ($k =~ /^colorBD$/) {
+        $cmd = "5;0;$v";
+    } elsif ($k =~ /^colorUL$/) {
+        $cmd = "5;1;$v";
+    } elsif ($k =~ /^colorBL$/) {
+        $cmd = "5;2;$v";
+    } elsif ($k =~ /^colorRV$/) {
+        $cmd = "5;3;$v";
+    } elsif ($k =~ /^foreground$/) {
+        $cmd = "10;$v";
+    } elsif ($k =~ /^background$/) {
+        $cmd = "11;$v";
+    } elsif ($k =~ /^cursorColor$/) {
+        $cmd = "12;$v";
+    } elsif ($k =~ /^pointerColor$/) {
+        $cmd = "13;$v";
+    }
+    return "\033]".$cmd."\007"
+}
+
+sub build_cmd {
+    my $fn = shift;
+    my %colors = read_colors($fn);
+    my $s =  join(";", map {escape_seq($_, $colors{$_})} keys %colors);
+}
+
+sub on_user_command {
+    my ($self, $cmd) = @_;
+    my @fs = @{$self->{color_files}};
+    my $len = @fs;
+
+    if ($cmd eq "rotate-colors:forward") {
+        my $idx = $self->{current_index}++;
+        my $fn = $fs[$idx % scalar(@fs)];
+        $self->parse_keysym("M-C-m", build_cmd($fn));
+    } elsif ($cmd eq "rotate-colors:backward") {
+        my $idx = $self->{current_index}--;
+        my $fn = $fs[$idx % scalar(@fs)];
+        $self->cmd_parse($self->locale_encode(build_cmd($fn)));
+    }
+    ()
+}
