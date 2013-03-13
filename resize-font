@@ -57,16 +57,16 @@ sub on_user_command {
   my ($self, $string) = @_;
   my $font = $self->resource('font');
   my $regex = qr"(?!pixelsize=)(\d+)";
-  if ($string =~ /bigger$/) {
+  if ($string =~ /resize-font:bigger$/) {
     $font =~ s/$regex/$1+2/e;
   }
-  elsif ($string =~ /smaller$/) {
+  elsif ($string =~ /resize-font:smaller$/) {
     $font =~ s/$regex/$1-2/e;
   }
-  elsif ($string =~ /reset$/) {
+  elsif ($string =~ /resize-font:reset$/) {
     $font = $default_font;
   }
-  elsif ($string =~ /show$/) {
+  elsif ($string =~ /resize-font:show$/) {
     my $term = $self->{'term'};
     $term->{'resize-font'}{'overlay'} = {
       ov => $term->overlay_simple (0, -1, $font),
@@ -77,9 +77,6 @@ sub on_user_command {
           delete $term->{'resize-font'}{'overlay'};
         }),
     };
-  }
-  else {
-    die "no font size found";
   }
   $self->cmd_parse(sprintf "\33]710;%s\007", $font);
   ()
