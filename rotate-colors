@@ -64,7 +64,7 @@ sub escape_seq {
 sub build_cmd {
     my $fn = shift;
     my %colors = read_colors($fn);
-    my $s =  join(";", map {escape_seq($_, $colors{$_})} keys %colors);
+    my $s =  join("", map {escape_seq($_, $colors{$_})} keys %colors);
 }
 
 sub on_user_command {
@@ -75,11 +75,11 @@ sub on_user_command {
     if ($cmd eq "rotate-colors:forward") {
         my $idx = $self->{current_index}++;
         my $fn = $fs[$idx % scalar(@fs)];
-        $self->parse_keysym("M-C-m", build_cmd($fn));
+        $self->cmd_parse(build_cmd($fn));
     } elsif ($cmd eq "rotate-colors:backward") {
         my $idx = $self->{current_index}--;
         my $fn = $fs[$idx % scalar(@fs)];
-        $self->cmd_parse($self->locale_encode(build_cmd($fn)));
+        $self->cmd_parse(build_cmd($fn));
     }
     ()
 }
