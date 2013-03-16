@@ -1,4 +1,4 @@
-A small collection of perl extensions for the rxvt-unicode terminal emulator.
+A small collection of Perl extensions for the rxvt-unicode terminal emulator.
 
 Installation
 ------------
@@ -104,3 +104,50 @@ On Mac OS X, put these lines in your .Xdefaults/.Xresources:
     URxvt.clipboard.pastecmd: pbpaste
 
 The use of the functions should be self-explanatory!
+
+
+rotate-colors
+-------------
+Rotate color definitions from a list of files.
+
+Install:
+    URxvt.perl-ext-common: ...,rotate-colors
+    URxvt.keysym.M-n:   perl:rotate-colors:next
+    URxvt.keysym.M-p:   perl:rotate-colors:prev
+
+Options:
+    URxvt.rotate-colors.files: A comma-delimited list of files containing color
+                              definitions like URxvt.color0: #000000. Other
+                              lines are ignored so listing entire config files
+                              should be ok.
+
+_This plugin is currently non-functional. It prints the escape sequence needed,
+however, so you can use it as a hard coded command bound to a keysym._
+
+    URxvt.keysym.C-M-l : command:\033]...
+
+
+resize-font
+-----------
+Increase and decrease the font size.
+
+Install:
+    URxvt.perl-ext-common: ...,resize-font
+    URxvt.keysym.C-M-plus:     perl:resize-font:bigger
+    URxvt.keysym.C-M-minus:    perl:resize-font:smaller
+    URxvt.keysym.C-M-equal:    perl:resize-font:reset
+    URxvt.keysym.C-M-question: perl:resize-font:show
+
+`perl:resize-font:reset` restores the original font size.
+`perl:resize-font:show` displays the current font and size using the OSD.
+
+
+tabbedex
+--------
+
+This plugin is huge and I don't use it. See the `tabbedex` file for an
+explanation and then feel free to contribute to this section of the README.
+
+Install:
+    URxvt.perl-ext-common: ...,tabbedex
+    ...
