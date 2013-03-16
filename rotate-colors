@@ -9,8 +9,8 @@
 # Usage: put the following lines in your .Xdefaults/.Xresources:
 #   URxvt.perl-ext-common: ...,rotate-colors
 #   URxvt.rotate-colors.files: ~/.Xresources,~/light.txt,~/dark.txt
-#   URxvt.keysym.M-C-n:   perl:rotate-colors:forward
-#   URxvt.keysym.M-C-p:   perl:rotate-colors:backward
+#   URxvt.keysym.M-C-n:   perl:rotate-colors:next
+#   URxvt.keysym.M-C-p:   perl:rotate-colors:prev
 
 use strict;
 
@@ -20,6 +20,7 @@ sub on_start {
     $self->{current_index} = -1;
     my @arr = split(/,/, $self->x_resource('files') || '');
     $self->{color_files} = \@arr;
+
     ()
 }
 
@@ -33,6 +34,7 @@ sub read_colors {
             $colors{$1} = $2;
         }
     }
+
     return %colors
 }
 
@@ -58,6 +60,7 @@ sub escape_seq {
     } elsif ($k =~ /^pointerColor$/) {
         $cmd = "13;$v";
     }
+
     return '\033]'.$cmd.'\007'
 }
 
@@ -66,6 +69,7 @@ sub build_cmd {
     my %colors = read_colors($fn);
     print $fn."\n";
     my $s =  join("", map {escape_seq($_, $colors{$_})} keys %colors);
+
     return $s
 }
 
@@ -74,14 +78,15 @@ sub on_user_command {
     my @fs = @{$self->{color_files}};
     my $len = @fs;
 
-    if ($cmd eq "rotate-colors:forward") {
+    if ($cmd eq "rotate-colors:next") {
         my $idx = $self->{current_index}++;
         my $fn = $fs[$idx % scalar(@fs)];
         $self->cmd_parse(build_cmd($fn));
-    } elsif ($cmd eq "rotate-colors:backward") {
+    } elsif ($cmd eq "rotate-colors:prev") {
         my $idx = $self->{current_index}--;
         my $fn = $fs[$idx % scalar(@fs)];
         $self->cmd_parse(build_cmd($fn));
     }
+
     ()
 }
