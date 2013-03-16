@@ -55,29 +55,31 @@ sub bind_hotkeys {
 
 sub on_user_command {
   my ($self, $string) = @_;
-  my $font = $self->resource('font');
-  my $regex = qr"(?!pixelsize=)(\d+)";
-  if ($string =~ /resize-font:bigger$/) {
-    $font =~ s/$regex/$1+2/e;
+  if ($string =~ /resize-font:/) {
+      my $font = $self->resource('font');
+      my $regex = qr"(?!pixelsize=)(\d+)";
+      if ($string =~ /resize-font:bigger$/) {
+        $font =~ s/$regex/$1+2/e;
+      }
+      elsif ($string =~ /resize-font:smaller$/) {
+        $font =~ s/$regex/$1-2/e;
+      }
+      elsif ($string =~ /resize-font:reset$/) {
+        $font = $default_font;
+      }
+      elsif ($string =~ /resize-font:show$/) {
+        my $term = $self->{'term'};
+        $term->{'resize-font'}{'overlay'} = {
+          ov => $term->overlay_simple (0, -1, $font),
+          to => urxvt::timer
+          ->new
+          ->start (urxvt::NOW + 1)
+          ->cb(sub {
+              delete $term->{'resize-font'}{'overlay'};
+            }),
+        };
+      }
+      $self->cmd_parse(sprintf "\33]710;%s\007", $font);
   }
-  elsif ($string =~ /resize-font:smaller$/) {
-    $font =~ s/$regex/$1-2/e;
-  }
-  elsif ($string =~ /resize-font:reset$/) {
-    $font = $default_font;
-  }
-  elsif ($string =~ /resize-font:show$/) {
-    my $term = $self->{'term'};
-    $term->{'resize-font'}{'overlay'} = {
-      ov => $term->overlay_simple (0, -1, $font),
-      to => urxvt::timer
-      ->new
-      ->start (urxvt::NOW + 1)
-      ->cb(sub {
-          delete $term->{'resize-font'}{'overlay'};
-        }),
-    };
-  }
-  $self->cmd_parse(sprintf "\33]710;%s\007", $font);
   ()
 }
