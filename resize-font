@@ -31,29 +31,6 @@ sub on_start {
   $default_font = $_[0]->resource('font');
 }
 
-sub on_init {
-   my ($self) = @_;
-   my $commands = {
-     "smaller" => "C-minus",
-     "bigger" => "C-plus",
-     "reset" => "C-equal",
-     "show" => "C-question",
-   };
-   bind_hotkeys($self, $commands);
-   ()
-}
-
-sub bind_hotkeys {
-  my ($self, $commands) = @_;
-  for (keys %$commands) {
-    my $hotkey = $self->x_resource("resize-font.$_") || $$commands{$_};
-
-    $self->parse_keysym($hotkey, "perl:resize-font:$_") or
-    warn "unable to register '$hotkey' as hotkey for $_\n";
-  }
-
-  ()
-}
 
 sub on_user_command {
   my ($self, $string) = @_;
