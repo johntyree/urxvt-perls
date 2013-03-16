@@ -36,7 +36,7 @@ sub on_user_command {
   my ($self, $string) = @_;
   if ($string =~ /resize-font:/) {
       my $font = $self->resource('font');
-      my $regex = qr"(?!pixelsize=)(\d+)";
+      my $regex = qr"(?!size=)(\d+)";
       if ($string =~ /resize-font:bigger$/) {
         $font =~ s/$regex/$1+2/e;
       }
@@ -58,7 +58,8 @@ sub on_user_command {
             }),
         };
       }
-      $self->cmd_parse(sprintf "\33]710;%s\007", $font);
+      $self->cmd_parse(sprintf "\033]710;%s\007", $font);
   }
+
   ()
 }
