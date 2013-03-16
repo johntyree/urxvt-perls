@@ -8,7 +8,7 @@
 
 # Usage: put the following lines in your .Xdefaults/.Xresources:
 #   URxvt.perl-ext-common: ...,rotate-colors
-#   URxvt.colorFiles: ~/.Xresources,~/light.txt,~/dark.txt
+#   URxvt.rotate-colors.files: ~/.Xresources,~/light.txt,~/dark.txt
 #   URxvt.keysym.M-C-n:   perl:rotate-colors:forward
 #   URxvt.keysym.M-C-p:   perl:rotate-colors:backward
 
@@ -18,7 +18,7 @@ use strict;
 sub on_start {
     my ($self) = @_;
     $self->{current_index} = -1;
-    my @arr = split(/,/, $self->x_resource('colorFiles') || '');
+    my @arr = split(/,/, $self->x_resource('files') || '');
     $self->{color_files} = \@arr;
     ()
 }
