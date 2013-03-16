@@ -58,13 +58,15 @@ sub escape_seq {
     } elsif ($k =~ /^pointerColor$/) {
         $cmd = "13;$v";
     }
-    return "\033]".$cmd."\007"
+    return '\033]'.$cmd.'\007'
 }
 
 sub build_cmd {
     my $fn = shift;
     my %colors = read_colors($fn);
+    print $fn."\n";
     my $s =  join("", map {escape_seq($_, $colors{$_})} keys %colors);
+    return $s
 }
 
 sub on_user_command {
