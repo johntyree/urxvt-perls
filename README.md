@@ -150,7 +150,7 @@ tabbedex
 --------
 
 This plugin is huge and I don't use it. See the `tabbedex` file for an
-explanation and then feel free to contribute to this section of the README.
+explanation and then feel free to contribute to this section.
 
 Install:
 
