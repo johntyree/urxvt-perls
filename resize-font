@@ -38,10 +38,10 @@ sub on_user_command {
       my $font = $self->resource('font');
       my $regex = qr"(?!size=)(\d+)";
       if ($string =~ /resize-font:bigger$/) {
-        $font =~ s/$regex/$1+2/e;
+        $font =~ s/$regex/$1+1/e;
       }
       elsif ($string =~ /resize-font:smaller$/) {
-        $font =~ s/$regex/$1-2/e;
+        $font =~ s/$regex/$1-1/e;
       }
       elsif ($string =~ /resize-font:reset$/) {
         $font = $default_font;
