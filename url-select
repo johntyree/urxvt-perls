@@ -74,6 +74,7 @@ sub line_update {
 	my ($self, $row) = @_;
 
 	my $line = $self->line($row);
+	return () if($line->{len} > 100000);
 	my $text = $line->t;
 	my $rend = $line->r;
 
